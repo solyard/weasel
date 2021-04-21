@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/weasel/pkg/weasel"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
@@ -16,7 +17,7 @@ func StartTelegramBot() {
 	b, err := tb.NewBot(tb.Settings{
 		// You can also set custom API URL.
 		// If field is empty it equals to "https://api.telegram.org".
-		Token:  "",
+		Token:  weasel.LoadConfig(),
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
 
@@ -33,5 +34,5 @@ func SendMessageToBot(alert string, channel string) {
 	if err != nil {
 		fmt.Printf("Error while convert chat ID to INT: %v", err)
 	}
-	Bot.Send(tb.ChatID(chatId), alert)
+	Bot.Send(tb.ChatID(chatId), alert, tb.ParseMode("Markdown"))
 }

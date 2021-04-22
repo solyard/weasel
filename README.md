@@ -24,6 +24,6 @@ Run image with `docker` or on your Linux / Windows system and add config to your
         receivers:
         - name: 'telegram'
           webhook_configs:
-          - url: 'http://localhost:8081/api/v1/alerts/-1001279101580'
+          - url: 'http://localhost:8081/api/v1/alerts/{chat_id}'
             send_resolved: true
 ```

@@ -27,3 +27,10 @@ Run image with `docker` or on your Linux / Windows system and add config to your
           - url: 'http://localhost:8081/api/v1/alerts/{chat_id}'
             send_resolved: true
 ```
+
+For testing your installation you simply can use `curl` with `POST` method:
+
+```bash
+curl -XPOST -H "Content-type: application/json" -d '{"alerts":[{"annotations":{"description":"SOME TEXT DATA","summary":"TEST ALERT"},"generatorURL":"http:\/\/alert:8080\/api\/v1\/15821810008956981301\/8832311346543396454\/status","labels":{"alertgroup":"rules","alertname":"CRITICAL TEST","instance":"my-test-instance","severity":"critical"},"startsAt":"2021-04-20T05:15:04.65109161Z"},{"annotations":{"description":"SOME TEXT DATA","summary":"TEST LERT"},"generatorURL":"http:\/\/alert:8080\/api\/v1\/15821810008956981301\/15760119835279596093\/status","labels":{"alertgroup":"rules","alertname":"WARNING TEST","instance":"my-test-instance","severity":"warning"},"startsAt":"2021-04-20T05:14:34.648183556Z"}],"commonAnnotations":{"summary":"SOME ANNOTATIONS"},"commonLabels":{"alertgroup":"rules","instance":"my-test-instance"},"externalURL":"http:\/\/alert:9093","groupKey":0,"groupLabels":{},"receiver":"telegram","status":"resolved","version":0}' 'localhost:8081/api/v1/alert/{chat_id}'
+```
+

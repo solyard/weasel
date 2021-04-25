@@ -8,7 +8,7 @@ Telegram bot for Prometheus Alertmanager
 
 ---
 
-STATUS:
+**STATUS**:
 ![Image](https://img.shields.io/github/workflow/status/solyard/weasel/Go?label=Go%20Compile%20&style=plastic)
 ![Image](https://img.shields.io/github/workflow/status/solyard/weasel/ci?color=blue&label=Docker%20Build&style=plastic)
 

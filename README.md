@@ -7,6 +7,10 @@ Telegram bot for Prometheus Alertmanager
 **Weasel** - it's a simple Telegram Bot for Alertmanager that can recieve alerts and transfer it to telegram with templating feature and MARKDOWN support by Telegram
 
 ---
+STATUS:
+![Image](https://img.shields.io/github/workflow/status/solyard/weasel/Go?label=Go%20Compile%20&style=plastic)
+![Image](https://img.shields.io/github/workflow/status/solyard/weasel/ci?color=blue&label=Docker%20Build&style=plastic)
+---
 <h2>HOW TO USE</h2>
 
 Just build image with your (or default) template and add your Telegram Bot Token recieved from [@BotFather](https://t.me/botfather).

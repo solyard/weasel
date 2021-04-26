@@ -23,8 +23,19 @@ Just build image with your (or default) template and add your Telegram Bot Token
 
 Run image with `docker` or on your Linux / Windows system and add config to your `Prometheus Alertmanager` to start recieve some messages
 
+Example for **VictoriaMetrics Operator (VMAlertmanager)**
+
 ```yaml
-          global:
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanager
+metadata:
+  name: vmalertmanager
+  namespace: monitoring
+spec:
+  replicaCount: 1
+  configSecret: alertmanager-config
+  configRawYaml: |
+        global:
           resolve_timeout: 5m
         route:
           group_wait: 30s
@@ -34,7 +45,7 @@ Run image with `docker` or on your Linux / Windows system and add config to your
         receivers:
         - name: 'telegram'
           webhook_configs:
-          - url: 'http://localhost:8081/api/v1/alerts/{chat_id}'
+          - url: 'http://prometheus-telegram-bot:9087/alert/{chat_id}'
             send_resolved: true
 ```
 

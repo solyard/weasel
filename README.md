@@ -45,7 +45,7 @@ spec:
         receivers:
         - name: 'telegram'
           webhook_configs:
-          - url: 'http://prometheus-telegram-bot:9087/alert/{chat_id}'
+          - url: 'http://prometheus-telegram-bot:8081/api/v1/alert/{chat_id}'
             send_resolved: true
 ```
 

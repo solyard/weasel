@@ -2,43 +2,43 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: prometheus-telegram-bot
+  name: prometheus-weasel
   namespace: monitoring
   labels:
-    app: prometheus-telegram-bot
+    app: prometheus-weasel
 spec:
   ports:
   - port: 8081
     protocol: TCP
     name: http
   selector:
-    app: prometheus-telegram-bot
+    app: prometheus-weasel
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prometheus-telegram-bot
+  name: prometheus-weasel
   namespace: monitoring
   labels:
-    app: prometheus-telegram-bot
+    app: prometheus-weasel
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: prometheus-telegram-bot
+      app: prometheus-weasel
   template:
     metadata:
       labels:
-        app: prometheus-telegram-bot
+        app: prometheus-weasel
     spec:
       volumes:
       - name: config
         configMap:
-          name: prometheus-telegram-bot-config
+          name: prometheus-weasel-config
       containers:
       - name: prometheus-bot
-        image: solyard/weasel:latest
+        image: solard/weasel:latest
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8081
@@ -48,17 +48,18 @@ spec:
           requests:
             cpu: "100m"
             memory: "50M"
-      volumeMounts:
-        - mountPath: config.yaml
-          name: config
-          subPath: config/config.yaml
+        volumeMounts:
+          - mountPath: config.yaml
+            name: config
+            subPath: config/config.yaml
 ---
 
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: prometheus-telegram-bot-config
+  name: prometheus-weasel-config
   namespace: monitoring
 data:
   config.yaml: |
     botToken: "<TOKEN>"
+

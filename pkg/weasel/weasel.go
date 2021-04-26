@@ -37,7 +37,7 @@ type BotConfig struct {
 func LoadConfig() string {
 
 	var cfg *BotConfig
-	yamlFile, err := ioutil.ReadFile("config/telegram.conf.yaml")
+	yamlFile, err := ioutil.ReadFile("config/config.yaml")
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
 	}

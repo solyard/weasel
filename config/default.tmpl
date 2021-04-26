@@ -1,8 +1,9 @@
+{{ $status := .Status }}
 {{- range $val := .Alerts }}
+
   {{$severity := index $val.Labels "severity" -}}
-  {{if $val.EndsAt}}
-  💚 {{ index $val.Labels "alertname" }}
-  {{else if eq $severity "warning" -}}
+  {{- if eq $status "firing" }}
+  {{- if eq $severity "warning" -}}
   💛 {{ index $val.Labels "alertname" }}
   {{else if eq $severity "critical" -}}
   ❤️ {{ index $val.Labels "alertname" }}
@@ -11,12 +12,18 @@
   {{else -}}
   ⚠️ {{ index $val.Labels "alertname" }}
   {{ end -}}
+  {{ end -}}
+  {{- if eq $status "resolved" }}
+  💚 {{ index $val.Labels "alertname" -}}
+  {{- end }}
   ```
-  {{ index $val.Annotations "description"}}
+  {{ with index $val.Annotations "message" }}{{ . }}{{- end -}}
+  {{ with index $val.Annotations "description" }}{{ . }}{{- end }}
   ```
   *Severity*: {{ $severity | ToUpper }}
   *Started*: {{ $val.StartsAt }}
-  {{if $val.EndsAt -}}
+  {{- if eq $status "resolved"}}
+  {{- if $val.EndsAt }}
   *Ended*: {{ $val.EndsAt }}
-  {{ end }}
+  {{ end -}}{{ end -}}
 {{- end }}

@@ -44,7 +44,7 @@ docker run -p 8081:8081 solard/weasel
 ```
 If you want to add additional config and (or) template just mount it into `docker image`
 ```
-docker run -p 8081:8081 -v $(pwd)/config.yaml:/config/telegram.conf.yaml -v $(pwd)/my_custom_template.tmpl:/confing/default.tmpl solard/weasel
+docker run -p 8081:8081 -v $(pwd)/config.yaml:/config/config.yaml -v $(pwd)/my_custom_template.tmpl:/confing/default.tmpl solard/weasel
 ```
 
 For testing your installation you simply can use `curl` with `POST` method:

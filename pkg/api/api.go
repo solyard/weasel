@@ -33,13 +33,13 @@ func recieveAlertJSON(w http.ResponseWriter, r *http.Request) {
 
 	//fmt.Printf("%s\n", body)
 	//fmt.Printf("%v", *&alertBody.Alerts[0].Annotations)
-	var responce bytes.Buffer
-	err = AlertTemplate.Execute(&responce, alertBody)
+	var response bytes.Buffer
+	err = AlertTemplate.Execute(&response, alertBody)
 	if err != nil {
 		fmt.Printf("Error while executing template: %v", err)
 	}
 
-	telegram.SendMessageToBot(fmt.Sprintf("%s", &responce), vars["chat_id"])
+	telegram.SendMessageToBot(fmt.Sprintf("%s", &response), vars["chat_id"])
 }
 
 func InitialiseAPI() {

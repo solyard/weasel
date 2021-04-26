@@ -7,6 +7,16 @@ Telegram bot for Prometheus Alertmanager
 **Weasel** - it's a simple Telegram Bot for Alertmanager that can recieve alerts and transfer it to telegram with templating feature and MARKDOWN support by Telegram
 
 ---
+
+**STATUS**:
+
+![Image](https://img.shields.io/github/workflow/status/solyard/weasel/Go?label=Go%20Compile%20&style=for-the-badge)
+
+![Image](https://img.shields.io/github/workflow/status/solyard/weasel/ci?color=blue&label=Docker%20Build&style=for-the-badge)
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/solyard/weasel)](https://goreportcard.com/report/github.com/solyard/weasel)
+
+---
 <h2>HOW TO USE</h2>
 
 Just build image with your (or default) template and add your Telegram Bot Token recieved from [@BotFather](https://t.me/botfather).
@@ -26,6 +36,15 @@ Run image with `docker` or on your Linux / Windows system and add config to your
           webhook_configs:
           - url: 'http://localhost:8081/api/v1/alerts/{chat_id}'
             send_resolved: true
+```
+
+You can `run` image with simple `docker run` command
+```
+docker run -p 8081:8081 solard/weasel
+```
+If you want to add additional config and (or) template just mount it into `docker image`
+```
+docker run -p 8081:8081 -v $(pwd)/config.yaml:/config/telegram.conf.yaml -v $(pwd)/my_custom_template.tmpl:/confing/default.tmpl solard/weasel
 ```
 
 For testing your installation you simply can use `curl` with `POST` method:

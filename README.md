@@ -47,9 +47,9 @@ spec:
         global:
           resolve_timeout: 5m
         route:
-          group_wait: 30s
-          group_interval: 5m
-          repeat_interval: 3h
+          group_wait: 5s
+          group_interval: 1m
+          repeat_interval: 15m
           receiver: 'telegram'
         receivers:
         - name: 'telegram'

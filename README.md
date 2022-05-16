@@ -28,7 +28,7 @@ Bot for Prometheus Alertmanager
 
 Just build/pull image and set your (or default) template and add your Telegram Bot Token recieved from [@BotFather](https://t.me/botfather).
 
-> Don't forget to setup the env variable (TELEGRAM_BOT_TOKEN) for
+> Don't forget to setup the env variable (TELEGRAM_BOT_TOKEN)
 
 Run image with `docker` or on your Linux / Windows system and add config to your `Prometheus Alertmanager` to start recieve some messages
 

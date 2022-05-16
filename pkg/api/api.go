@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"text/template"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/gorilla/mux"
 	"github.com/weasel/pkg/telegram"
@@ -25,30 +26,33 @@ func recieveAlertJSON(w http.ResponseWriter, r *http.Request) {
 
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		log.Fatalf("%v", err)
+		log.Fatalf("Error while reading body: %v", err)
+		return
 	}
 
 	var alertBody *weasel.Alerts
-	_ = json.Unmarshal(body, &alertBody)
+	err = json.Unmarshal(body, &alertBody)
+	if err != nil {
+		log.Errorf("Error while unmarshaling JSON: %v", err)
+		return
+	}
 
-	//fmt.Printf("%s\n", body)
-	//fmt.Printf("%v", *&alertBody.Alerts[0].Annotations)
 	var response bytes.Buffer
 	err = AlertTemplate.Execute(&response, alertBody)
 	if err != nil {
-		fmt.Printf("Error while executing template: %v", err)
+		log.Errorf("Error while executing template: %v", err)
+		return
 	}
 
-	telegram.SendMessageToBot(fmt.Sprintf("%s", &response), vars["chat_id"])
+	telegram.SendAlert(fmt.Sprintf("%s", &response), vars["chat_id"])
 }
 
-func InitialiseAPI() {
-	// Initializing Router
+func Start() {
 	fmt.Println("Launching API and Loading configuration")
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc(APIEndpoint+"alert/{chat_id}", recieveAlertJSON).Methods("POST")
 
 	AlertTemplate = weasel.LoadTemplate()
-	fmt.Println("Configuration Loaded! Starting API ...")
+	log.Info("Configuration Loaded! Starting API ...")
 	log.Fatal(http.ListenAndServe(":8081", router))
 }

@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	go api.InitialiseAPI()
-	telegram.StartTelegramBot()
+	go api.Start()
+	telegram.Start()
 
 }

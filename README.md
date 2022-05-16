@@ -1,10 +1,10 @@
 ![Image](weasel.png)
 
-Telegram bot for Prometheus Alertmanager
+Bot for Prometheus Alertmanager
 
 ---
 
-**Weasel** - it's a simple Telegram Bot for Alertmanager that can recieve alerts and transfer it to telegram with templating feature and MARKDOWN support by Telegram
+**Weasel** - it's a simple Bot for Alertmanager that can recieve alerts and transfer it to telegram with templating feature and MARKDOWN support
 
 ---
 
@@ -17,34 +17,54 @@ Telegram bot for Prometheus Alertmanager
 [![Go Report Card](https://goreportcard.com/badge/github.com/solyard/weasel)](https://goreportcard.com/report/github.com/solyard/weasel)
 
 ---
+
+**SUPPORTED MESSENGERS**
+- [x] Telegram
+- [ ] Slack
+- [ ] Matrix
+
+---
 <h2>HOW TO USE</h2>
 
-Just build image with your (or default) template and add your Telegram Bot Token recieved from [@BotFather](https://t.me/botfather).
+Just build/pull image and set your (or default) template and add your Telegram Bot Token recieved from [@BotFather](https://t.me/botfather).
+
+> Don't forget to setup the env variable (TELEGRAM_BOT_TOKEN)
 
 Run image with `docker` or on your Linux / Windows system and add config to your `Prometheus Alertmanager` to start recieve some messages
 
+Example for **VictoriaMetrics Operator (VMAlertmanager)**
+
 ```yaml
-          global:
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanager
+metadata:
+  name: vmalertmanager
+  namespace: monitoring
+spec:
+  replicaCount: 1
+  configSecret: alertmanager-config
+  configRawYaml: |
+        global:
           resolve_timeout: 5m
         route:
-          group_wait: 30s
-          group_interval: 5m
-          repeat_interval: 3h
+          group_wait: 5s
+          group_interval: 1m
+          repeat_interval: 15m
           receiver: 'telegram'
         receivers:
         - name: 'telegram'
           webhook_configs:
-          - url: 'http://localhost:8081/api/v1/alerts/{chat_id}'
+          - url: 'http://prometheus-weasel:8081/api/v1/alert/{chat_id}'
             send_resolved: true
 ```
 
 You can `run` image with simple `docker run` command
 ```
-docker run -p 8081:8081 solard/weasel
+docker run -p 8081:8081 solard/weasel -e TELEGRAM_BOT_TOKEN="<secret token>"
 ```
 If you want to add additional config and (or) template just mount it into `docker image`
 ```
-docker run -p 8081:8081 -v $(pwd)/config.yaml:/config/config.yaml -v $(pwd)/my_custom_template.tmpl:/confing/default.tmpl solard/weasel
+docker run -p 8081:8081 -v $(pwd)/my_custom_template.tmpl:/confing/default.tmpl -e TELEGRAM_BOT_TOKEN="<secret token>" solard/weasel
 ```
 
 For testing your installation you simply can use `curl` with `POST` method:

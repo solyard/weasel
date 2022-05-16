@@ -1,0 +1,65 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-weasel
+  namespace: monitoring
+  labels:
+    app: prometheus-weasel
+spec:
+  ports:
+  - port: 8081
+    protocol: TCP
+    name: http
+  selector:
+    app: prometheus-weasel
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-weasel
+  namespace: monitoring
+  labels:
+    app: prometheus-weasel
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-weasel
+  template:
+    metadata:
+      labels:
+        app: prometheus-weasel
+    spec:
+      volumes:
+      - name: config
+        configMap:
+          name: prometheus-weasel-config
+      containers:
+      - name: prometheus-bot
+        image: solard/weasel:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8081
+          name: http
+          protocol: TCP
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "50M"
+        volumeMounts:
+          - mountPath: config.yaml
+            name: config
+            subPath: config/config.yaml
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-weasel-config
+  namespace: monitoring
+data:
+  config.yaml: |
+    botToken: "<TOKEN>"
+

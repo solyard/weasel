@@ -1,13 +1,13 @@
 package weasel
 
 import (
-	"fmt"
 	"io/ioutil"
-	"log"
 	"strings"
 	"text/template"
 
-	"gopkg.in/yaml.v2"
+	log "github.com/sirupsen/logrus"
+
+	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type Alerts struct {
@@ -31,21 +31,18 @@ type Alert struct {
 }
 
 type BotConfig struct {
-	BotToken string `yaml:"botToken"`
+	BotToken string `env:"TELEGRAM_BOT_TOKEN"`
 }
 
 func LoadConfig() string {
-
-	var cfg *BotConfig
-	yamlFile, err := ioutil.ReadFile("config/config.yaml")
+	var cfg BotConfig
+	err := cleanenv.ReadEnv(&cfg)
 	if err != nil {
-		log.Printf("yamlFile.Get err   #%v ", err)
+		log.Fatalf("Error while reading bot token from TELEGRAM_BOT_TOKEN variable. Error: %v", err)
 	}
-	err = yaml.Unmarshal(yamlFile, &cfg)
-	if err != nil {
-		log.Fatalf("Unmarshal: %v", err)
+	if cfg.BotToken == "" {
+		log.Fatal("Please set up bot token to run this app: %v", err)
 	}
-
 	return cfg.BotToken
 }
 
@@ -56,12 +53,12 @@ func LoadTemplate() *template.Template {
 
 	content, err := ioutil.ReadFile("config/default.tmpl")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error while reading template file: %v", err)
 	}
 
 	tmpl, err := template.New("Alert").Funcs(funcMap).Parse(string(content))
 	if err != nil {
-		fmt.Printf("Error while creating template: %v", err)
+		log.Fatalf("Error while creating template: %v", err)
 	}
 
 	return tmpl

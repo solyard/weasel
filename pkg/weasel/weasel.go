@@ -1,11 +1,11 @@
 package weasel
 
 import (
-	"fmt"
 	"io/ioutil"
-	"log"
 	"strings"
 	"text/template"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/ilyakaznacheev/cleanenv"
 )
@@ -38,10 +38,10 @@ func LoadConfig() string {
 	var cfg BotConfig
 	err := cleanenv.ReadEnv(&cfg)
 	if err != nil {
-		log.Fatalf("Error while reading bot token from TELEGRAM_BOT_TOKEN variable. Error: %v", err.Error())
+		log.Fatalf("Error while reading bot token from TELEGRAM_BOT_TOKEN variable. Error: %v", err)
 	}
 	if cfg.BotToken == "" {
-		log.Fatal("Please set up bot token to run this app")
+		log.Fatal("Please set up bot token to run this app: %v", err)
 	}
 	return cfg.BotToken
 }
@@ -53,12 +53,12 @@ func LoadTemplate() *template.Template {
 
 	content, err := ioutil.ReadFile("config/default.tmpl")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error while reading template file: %v", err)
 	}
 
 	tmpl, err := template.New("Alert").Funcs(funcMap).Parse(string(content))
 	if err != nil {
-		fmt.Printf("Error while creating template: %v", err)
+		log.Fatalf("Error while creating template: %v", err)
 	}
 
 	return tmpl

@@ -1,22 +1,19 @@
 package telegram
 
 import (
-	"fmt"
-	"log"
 	"strconv"
 	"time"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/weasel/pkg/weasel"
 	tb "gopkg.in/tucnak/telebot.v2"
 )
 
 var Bot *tb.Bot
 
-func StartTelegramBot() {
-	fmt.Println("Launching TelegramBot ...")
+func Start() {
+	log.Info("Launching Telegram Bot ...")
 	b, err := tb.NewBot(tb.Settings{
-		// You can also set custom API URL.
-		// If field is empty it equals to "https://api.telegram.org".
 		Token:  weasel.LoadConfig(),
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
@@ -29,10 +26,11 @@ func StartTelegramBot() {
 	b.Start()
 }
 
-func SendMessageToBot(alert string, channel string) {
+func SendAlert(alert string, channel string) {
 	chatId, err := strconv.Atoi(channel)
 	if err != nil {
-		fmt.Printf("Error while convert chat ID to INT: %v", err)
+		log.Errorf("Error while convert chat ID to INT: %v", err)
+		return
 	}
 	Bot.Send(tb.ChatID(chatId), alert, tb.ParseMode("Markdown"))
 }

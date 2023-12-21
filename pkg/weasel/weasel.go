@@ -41,7 +41,7 @@ func LoadConfig() string {
 		log.Fatalf("Error while reading bot token from TELEGRAM_BOT_TOKEN variable. Error: %v", err)
 	}
 	if cfg.BotToken == "" {
-		log.Fatal("Please set up bot token to run this app: %v", err)
+		log.Fatal("Please set up bot token to run this app in evn TELEGRAM_BOT_TOKEN")
 	}
 	return cfg.BotToken
 }

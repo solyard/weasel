@@ -19,6 +19,20 @@ const APIEndpoint = "/api/v1/"
 
 var AlertTemplate *template.Template
 
+func Start() {
+	fmt.Println("Launching API and Loading configuration")
+	router := mux.NewRouter().StrictSlash(true)
+
+	// Define a single route that matches both patterns (with and without topic_id)
+	router.HandleFunc(APIEndpoint+"alert/{chat_id}", recieveAlertJSON).Methods("POST")
+	router.HandleFunc(APIEndpoint+"alert/{chat_id}/{topic_id}", recieveAlertJSON).Methods("POST")
+
+	AlertTemplate = weasel.LoadTemplate()
+	log.Info("Configuration Loaded! Starting API ...")
+	log.Fatal(http.ListenAndServe(":8081", router))
+}
+
+// Modify recieveAlertJSON to check for the presence of topic_id
 func recieveAlertJSON(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
@@ -44,15 +58,11 @@ func recieveAlertJSON(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	telegram.SendAlert(fmt.Sprintf("%s", &response), vars["chat_id"])
-}
-
-func Start() {
-	fmt.Println("Launching API and Loading configuration")
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc(APIEndpoint+"alert/{chat_id}", recieveAlertJSON).Methods("POST")
-
-	AlertTemplate = weasel.LoadTemplate()
-	log.Info("Configuration Loaded! Starting API ...")
-	log.Fatal(http.ListenAndServe(":8081", router))
+	// Check if topic_id is present
+	topicID, topicIDProvided := vars["topic_id"]
+	if topicIDProvided && topicID != "" {
+		telegram.SendAlertToTopic(response.String(), vars["chat_id"], topicID)
+	} else {
+		telegram.SendAlert(response.String(), vars["chat_id"])
+	}
 }

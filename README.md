@@ -33,7 +33,7 @@ Bot supports command to get your chatID and threadID if you are using Telegram T
 
 ```bash
 /chatID - will reply to your message with ChatID
-/threadID - will reply to yout message with ThreadID (Topic ID)
+/threadID - will reply to your message with ThreadID (Topic ID)
 ```
 
 Run image with `docker` or on your Linux / Windows system and add config to your `Prometheus Alertmanager` to start recieve some messages

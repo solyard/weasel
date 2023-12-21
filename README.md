@@ -10,9 +10,9 @@ Bot for Prometheus Alertmanager
 
 **STATUS**:
 
-![Image](https://img.shields.io/github/workflow/status/solyard/weasel/Go?label=Go%20Compile%20&style=for-the-badge)
+![GO Compile](https://img.shields.io/github/actions/workflow/status/solyard/weasel/go.yml?style=flat-square&label=GO%20Compile)
 
-![Image](https://img.shields.io/github/workflow/status/solyard/weasel/ci?color=blue&label=Docker%20Build&style=for-the-badge)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/solyard/weasel/ci.yml?style=flat-square&label=Docker%20Build)
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/solyard/weasel)](https://goreportcard.com/report/github.com/solyard/weasel)
 
@@ -21,7 +21,6 @@ Bot for Prometheus Alertmanager
 **SUPPORTED MESSENGERS**
 - [x] Telegram
 - [ ] Slack
-- [ ] Matrix
 
 ---
 <h2>HOW TO USE</h2>
@@ -55,6 +54,32 @@ spec:
         - name: 'telegram'
           webhook_configs:
           - url: 'http://prometheus-weasel:8081/api/v1/alert/{chat_id}'
+            send_resolved: true
+```
+
+If you are inspired by new Telegram Topics you can use this construction to send Alert in specified Topic:
+
+```yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlertmanager
+metadata:
+  name: vmalertmanager
+  namespace: monitoring
+spec:
+  replicaCount: 1
+  configSecret: alertmanager-config
+  configRawYaml: |
+        global:
+          resolve_timeout: 5m
+        route:
+          group_wait: 5s
+          group_interval: 1m
+          repeat_interval: 15m
+          receiver: 'telegram'
+        receivers:
+        - name: 'telegram'
+          webhook_configs:
+          - url: 'http://prometheus-weasel:8081/api/v1/alert/{chat_id}/{topic_id}'
             send_resolved: true
 ```
 

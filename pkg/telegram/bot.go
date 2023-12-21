@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -22,8 +23,17 @@ func Start() {
 		log.Fatal(err)
 	}
 
+	b.Handle("/chatID", func(c tb.Context) error {
+		return c.Reply(fmt.Sprintf("Current Chat ID: %v", c.Chat().ID))
+	})
+
+	b.Handle("/threadID", func(c tb.Context) error {
+		return c.Reply(fmt.Sprintf("Current Thread ID: %v \n\nIf you received 0 (zero) than you are in General topic or in chat without Threads", c.Message().ThreadID))
+	})
+
 	Bot = b
 	b.Start()
+
 }
 
 func SendAlert(alert string, channel string) {
@@ -33,7 +43,7 @@ func SendAlert(alert string, channel string) {
 		return
 	}
 
-	Bot.Send(tb.ChatID(chatId), alert, tb.ParseMode("Markdown"))
+	Bot.Send(tb.ChatID(chatId), alert, &tb.SendOptions{ParseMode: "Markdown"})
 }
 
 func SendAlertToTopic(alert string, channel string, topic string) {

@@ -29,6 +29,13 @@ Just build/pull image and set your (or default) template and add your Telegram B
 
 > Don't forget to setup the env variable (TELEGRAM_BOT_TOKEN)
 
+Bot supports command to get your chatID and threadID if you are using Telegram Topics:
+
+```bash
+/chatID - will reply to your message with ChatID
+/threadID - will reply to yout message with ThreadID (Topic ID)
+```
+
 Run image with `docker` or on your Linux / Windows system and add config to your `Prometheus Alertmanager` to start recieve some messages
 
 Example for **VictoriaMetrics Operator (VMAlertmanager)**

@@ -1,3 +1,7 @@
+# ⚠⚠⚠ This project will freeze soon! Weasel will reborn and return in new skin ... ⚠⚠⚠
+
+
+
 ![Image](weasel.png)
 
 Bot for Prometheus Alertmanager
